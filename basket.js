@@ -20,7 +20,7 @@ function Basket(basketId, apiKey) {
 
 // Adds a table with tableId to the basket.
 Basket.prototype.addTable = function(optTableId, callback) {
-  // Since the table ID is optional, it may be the callback function.
+  // Since the optTableId is optional, it may be the callback function.
   if (!callback && typeof optTableId === 'function') {
     callback = optTableId;
     optTableId = null;
@@ -37,7 +37,7 @@ Basket.prototype.getTable = function(tableId, callback) {
 
 // Renames the table from oldTableId to newTableId.
 Basket.prototype.renameTable = function(oldTableId, newTableId, callback) {
-  return request('PUT', `/${this.dbasketId}/tables/${oldTableId}`, { tableId: newTableId },
+  return request('PUT', `/${this.basketId}/tables/${oldTableId}`, { tableId: newTableId },
     { apiKey: this.apiKey }, callback);
 };
 
