@@ -1,0 +1,26 @@
+{
+  "name": "basket-api",
+  "version": "1.0.0",
+  "description": "Client-side library for Basket, a standalone data storage and integration solution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gristlabs/basket-api.git"
+  },
+  "author": "jakestreb",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gristlabs/basket-api/issues"
+  },
+  "homepage": "https://github.com/gristlabs/basket-api#readme",
+  "devDependencies": {
+    "babel-plugin-es6-promise": "^1.1.1",
+    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0"
+  },
+  "dependencies": {
+    "es6-promise": "^4.1.1"
+  }
+}

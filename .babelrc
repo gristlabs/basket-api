@@ -1,0 +1,6 @@
+{
+  "plugins": [
+  	"babel-plugin-es6-promise",
+  	"transform-es2015-arrow-functions"
+  ]
+}
