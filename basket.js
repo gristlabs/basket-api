@@ -15,7 +15,7 @@ function Basket(basketId, apiKey) {
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                             Public class methods                                    *
+ *                        Instance methods for public access                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Adds a table with tableId to the basket.
@@ -75,7 +75,7 @@ Basket.prototype.getTables = function(callback) {
 // };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                  Private class methods (require authentication)                     *
+ *                    Instance methods for authenticated access                        *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Deletes a basket with the given basketId. Requires a login object.
@@ -84,7 +84,7 @@ Basket.prototype.delete = function(login, callback) {
 };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                 Private static methods (require authentication)                     *
+ *                     Class methods for authenticated access                          *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Adds a basket belonging to the user. Requires a login object.
