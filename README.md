@@ -62,5 +62,5 @@ basket.deleteTable(tableId, optCallback)
 
 index.js is produced by babel from basket.js via:
 ```sh
-babel basket.js --watch --out-file index.js
+babel basket.js --out-file index.js
 ```

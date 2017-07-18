@@ -2,6 +2,8 @@
 
 var _Promise = typeof Promise === 'undefined' ? require('es6-promise').Promise : Promise;
 
+const axios = require('axios');
+
 const HOST = "https://syvvdfor2a.execute-api.us-east-1.amazonaws.com";
 const BASE_PATH = "/test";
 
@@ -17,81 +19,65 @@ function Basket(basketId, apiKey) {
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                             Public class methods                                    *
+ *                        Instance methods for public access                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Adds a table with tableId to the basket.
-Basket.prototype.addTable = function (optTableId, callback) {
-  // Since the optTableId is optional, it may be the callback function.
-  if (!callback && typeof optTableId === 'function') {
-    callback = optTableId;
+Basket.prototype.addTable = function (optTableId, optCallback) {
+  // Since the optTableId is optional, it may be the optCallback function.
+  if (!optCallback && typeof optTableId === 'function') {
+    optCallback = optTableId;
     optTableId = null;
   }
-  return request('POST', `/${this.basketId}/tables`, { tableId: optTableId }, { apiKey: this.apiKey }, callback);
+  return request('POST', `/${this.basketId}/tables`, { tableId: optTableId }, { apiKey: this.apiKey }, optCallback);
 };
 
 // Retrieves all data from the table with tableId from the basket.
-Basket.prototype.getTable = function (tableId, callback) {
-  return request('GET', `/${this.basketId}/tables/${tableId}`, null, { apiKey: this.apiKey }, callback);
+Basket.prototype.getTable = function (tableId, optCallback) {
+  return request('GET', `/${this.basketId}/tables/${tableId}`, null, { apiKey: this.apiKey }, optCallback);
 };
 
 // Renames the table from oldTableId to newTableId.
-Basket.prototype.renameTable = function (oldTableId, newTableId, callback) {
-  return request('PUT', `/${this.basketId}/tables/${oldTableId}`, { tableId: newTableId }, { apiKey: this.apiKey }, callback);
+Basket.prototype.renameTable = function (oldTableId, newTableId, optCallback) {
+  return request('PUT', `/${this.basketId}/tables/${oldTableId}`, { tableId: newTableId }, { apiKey: this.apiKey }, optCallback);
 };
 
 // Replaces table with tableId data with columnValues.
-Basket.prototype.replaceTableData = function (tableId, columnValues, callback) {
-  return request('PUT', `/${this.basketId}/tables/${tableId}`, columnValues, { apiKey: this.apiKey }, callback);
+Basket.prototype.replaceTableData = function (tableId, columnValues, optCallback) {
+  return request('PUT', `/${this.basketId}/tables/${tableId}`, columnValues, { apiKey: this.apiKey }, optCallback);
 };
 
 // Deletes table with tableId from the basket.
-Basket.prototype.deleteTable = function (tableId, callback) {
-  return request('DELETE', `/${this.basketId}/tables/${tableId}`, null, { apiKey: this.apiKey }, callback);
+Basket.prototype.deleteTable = function (tableId, optCallback) {
+  return request('DELETE', `/${this.basketId}/tables/${tableId}`, null, { apiKey: this.apiKey }, optCallback);
 };
 
 // Returns a list of tableIds in the current basket.
-Basket.prototype.getTables = function (callback) {
-  return request('GET', `/${this.basketId}/tables`, null, { apiKey: this.apiKey }, callback);
+Basket.prototype.getTables = function (optCallback) {
+  return request('GET', `/${this.basketId}/tables`, null, { apiKey: this.apiKey }, optCallback);
 };
 
-// Basket.prototype.getRows = function(tableId, columnValues, callback) {
-
-// };
-
-// Basket.prototype.addRows = function(tableId, columnValues, callback) {
-
-// };
-
-// Basket.prototype.editRows = function(tableId, columnValues, callback) {
-
-// };
-
-// Basket.prototype.deleteRows = function(tableId, columnValues, callback) {
-
-// };
-
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                  Private class methods (require authentication)                     *
+ *                    Instance methods for authenticated access                        *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Deletes a basket with the given basketId. Requires a login object.
-Basket.prototype.delete = function (login, callback) {
-  return request('DELETE', `/${this.basketId}`, null, { login: login }, callback);
+Basket.prototype.delete = function (login, optCallback) {
+  return request('DELETE', `/${this.basketId}`, null, { login: login }, optCallback);
 };
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- *                 Private static methods (require authentication)                     *
+ *                     Class methods for authenticated access                          *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 // Adds a basket belonging to the user. Requires a login object.
-Basket.addBasket = function (login, callback) {
-  return request('POST', `/`, null, { login: login }, callback);
+Basket.addBasket = function (login, optCallback) {
+  return request('POST', `/`, null, { login: login }, optCallback);
 };
 
 // Returns an array of basketIds belonging to the user. Requires a login object.
-Basket.getBaskets = function (login, callback) {
-  return request('GET', `/`, null, { login: login }, callback);
+Basket.getBaskets = function (login, optCallback) {
+  return request('GET', `/`, null, { login: login }, optCallback);
 };
 
 /**
@@ -119,33 +105,25 @@ function request(method, path, body, options, optCallback) {
   });
 }
 
-// The request function, implemented with a callback.
+// The request function, implemented with axios and a callback.
 function _requestCallback(method, path, body, options, callback) {
   options = options || {};
-  let xhr = new XMLHttpRequest();
-  let url = HOST + BASE_PATH + path;
-  xhr.open(method, url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  if (options.login) {
-    xhr.setRequestHeader('Authorization', JSON.stringify(options.login));
-  } else if (options.apiKey) {
-    xhr.setRequestHeader('Authorization', options.apiKey);
-  }
-  xhr.onload = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      let response = JSON.parse(xhr.responseText);
-      if (response.errorMessage) {
-        callback(new Error(response.errorMessage));
-      } else {
-        callback(null, response);
-      }
+  let auth = options.login ? JSON.stringify(options.login) : options.apiKey;
+  axios.request({
+    method: method,
+    baseURL: HOST + BASE_PATH,
+    url: path,
+    headers: Object.assign({ 'Content-Type': 'application/json' }, auth ? { 'Authorization': auth } : {}),
+    data: body
+  }).catch(function (error) {
+    callback(error, null);
+  }).then(function (response) {
+    if (response.data.errorMessage) {
+      callback(new Error(response.data.errorMessage));
+    } else {
+      callback(null, response.data);
     }
-    callback(new Error(xhr.statusText));
-  };
-  xhr.onerror = function () {
-    callback(new Error(xhr.statusText));
-  };
-  xhr.send(body ? JSON.stringify(body) : null);
+  });
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
