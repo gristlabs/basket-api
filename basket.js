@@ -45,7 +45,7 @@ Basket.prototype.renameTable = function(oldTableId, newTableId, optCallback) {
 
 // Replaces table with tableId data with columnValues.
 Basket.prototype.replaceTableData = function(tableId, columnValues, optCallback) {
-  return request('PUT', `/${this.basketId}/tables/${tableId}`, columnValues, { apiKey: this.apiKey },
+  return request('PUT', `/${this.basketId}/tables/${tableId}/records`, columnValues, { apiKey: this.apiKey },
     optCallback);
 };
 
