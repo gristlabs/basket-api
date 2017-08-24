@@ -44,7 +44,7 @@ Basket.prototype.renameTable = function (oldTableId, newTableId, optCallback) {
 
 // Replaces table with tableId data with columnValues.
 Basket.prototype.replaceTableData = function (tableId, columnValues, optCallback) {
-  return request('PUT', `/${this.basketId}/tables/${tableId}`, columnValues, { apiKey: this.apiKey }, optCallback);
+  return request('PUT', `/${this.basketId}/tables/${tableId}/records`, columnValues, { apiKey: this.apiKey }, optCallback);
 };
 
 // Deletes table with tableId from the basket.
@@ -115,14 +115,15 @@ function _requestCallback(method, path, body, options, callback) {
     url: path,
     headers: Object.assign({ 'Content-Type': 'application/json' }, auth ? { 'Authorization': auth } : {}),
     data: body
+  }).then(function (response) {
+    let data = response.data;
+    if (data.errorMessage) {
+      callback(new Error(data.errorMessage));
+    } else {
+      callback(null, data);
+    }
   }).catch(function (error) {
     callback(error, null);
-  }).then(function (response) {
-    if (response.data.errorMessage) {
-      callback(new Error(response.data.errorMessage));
-    } else {
-      callback(null, response.data);
-    }
   });
 }
 
