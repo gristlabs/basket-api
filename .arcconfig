@@ -1,0 +1,7 @@
+{
+  "project.name": "Grist Basket API",
+  "phabricator.uri" : "https://phab.getgrist.com/source/BA",
+  "http.basicauth.user": "grister",
+  "http.basicauth.pass": "ember2:NERD",
+  "generated-paths": "res/"
+}

@@ -57,6 +57,14 @@ Basket.prototype.getTables = function (optCallback) {
   return request('GET', `/${this.basketId}/tables`, null, { apiKey: this.apiKey }, optCallback);
 };
 
+// Uploads the attachment to S3 with key attachmentId.
+Basket.prototype.uploadAttachment = function (attachmentId, attachment, optCallback) {
+  return request('PUT', `/${this.basketId}/attachments/${attachmentId}`, null, { apiKey: this.apiKey }).then(function (signedUrl) {
+    // SignedUrl will not be appended to the baseUrl since it is an absolute path.
+    return request('PUT', signedUrl, attachment, null, optCallback);
+  });
+};
+
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  *                    Instance methods for authenticated access                        *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
